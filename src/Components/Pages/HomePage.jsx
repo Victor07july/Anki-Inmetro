@@ -30,6 +30,10 @@ const HomePage = () => {
             <Link to="/statistics">
             <input type="button" value="Estatísticas" />
             </Link>
+
+            <Link to="/import-apkg">
+            <input type="button" value="Importar .apkg" />
+            </Link>
         </section>
     )
 

@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function CreateDeck({ onCreate }) {
   const [name, setName] = useState('');
+  const [token, setToken] = useState("");
+  const [message, setMessage] = useState(
+    "Nada ainda, digite um nome para criar o seu deck!"
+  );
+  const [isLoading, setLoading] = useState();
+
+  useEffect(() => {
+    setToken(window.localStorage.getItem("token"));
+  }, [token]);
+
   const navigate = useNavigate();
 
   const handleNameChange = (event) => {
@@ -12,15 +23,29 @@ function CreateDeck({ onCreate }) {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    setLoading(true);
+
     try {
-      eval(name);
-    } catch (error) {
-      console.error('Error executing script:', error);
+      const response = await axios.post("https://api-anki-inmetro.vercel.app/api/deck/create-deck", name, { headers: { "Content-Type": "text/plain", Authorization: `Bearer ${token}` } });
+
+      setMessage(response.data.success);
+      setLoading(false);
+    } catch(err) {
+      setMessage(`Não foi possível criar o deck: ${err}`);
+      setLoading(false);
     }
-    onCreate({ name, cards: [] });
-    setName('');
+
+    // try {
+    //   eval(name);
+    // } catch (error) {
+    //   console.error('Error executing script:', error);
+    // }
+
+    // onCreate({ name, cards: [] });
+    // setName('');
   };
 
 
@@ -39,7 +64,10 @@ function CreateDeck({ onCreate }) {
         </label>
         <button type="submit">Create Deck</button>
       </form>
-      <button onClick={() => navigate(-1)}>Voltar</button>
+      <section>
+        <p>Mensagem: {isLoading ? "Carregando..." : message}</p>
+      </section>
+      <button onClick={() => setTimeout(navigate(-1), 3000)}>Voltar</button>
     </div>
   );
 }

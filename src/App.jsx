@@ -14,6 +14,7 @@ import User from './Components/User/User';
 import EditDeck from './Components/Pages/EditDeck';
 import ProtectedRoute from './Components/Helper/ProtectedRoute';
 import StatisticsPage from './Components/Pages/StatisticsPage';
+import ImportApkgPage from './Components/Pages/ImportApkg';
 
 
 function App() {
@@ -111,7 +112,10 @@ function App() {
                   />
                 }
               />
+
               <Route path="/statistics" element={<StatisticsPage />} />
+
+              <Route path="/import-apkg" element={<ImportApkgPage />} />
 
             </Routes>
           </main>
